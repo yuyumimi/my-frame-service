@@ -1,0 +1,32 @@
+server:
+  port: 9999
+spring:
+  application:
+    name: my-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
+          url-expression:
+      routes:
+        - id: my-provider
+          uri: lb://my-provider
+          predicates:
+            - Path=/api/v1/**
+          filters:
+            - StripPrefix=2
+            - RequestTime=true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
